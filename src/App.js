@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Users from './components/users/Users';
 import Search from './components/users/Search';
 import Alert from './components/layout/Alert';
+import About from './components/pages/About';
 import './App.css';
 import axios from 'axios';
 
@@ -40,24 +42,42 @@ class App extends Component {
     };
 
     render() {
-        // Destructure variable and function names to be used.
+        // Destructuring variable and function names to be used.
         const { users, loading, alert } = this.state;
         const { searchUsers, clearUsers, setAlert } = this;
 
         return (
-            <div className='App'>
-                <Navbar />
-                <div className='container'>
-                    <Alert alert={alert} />
-                    <Search
-                        searchUsers={searchUsers}
-                        clearUsers={clearUsers}
-                        showClear={users.length > 0 ? true : false}
-                        setAlert={setAlert}
-                    />
-                    <Users loading={loading} users={users} />
+            <Router>
+                <div className='App'>
+                    <Navbar />
+                    <div className='container'>
+                        <Alert alert={alert} />
+                        <Switch>
+                            <Route
+                                exact
+                                path='/'
+                                render={(props) => (
+                                    <Fragment>
+                                        <Search
+                                            searchUsers={searchUsers}
+                                            clearUsers={clearUsers}
+                                            showClear={
+                                                users.length > 0 ? true : false
+                                            }
+                                            setAlert={setAlert}
+                                        />
+                                        <Users
+                                            loading={loading}
+                                            users={users}
+                                        />
+                                    </Fragment>
+                                )}
+                            />
+                            <Route exact patch='/about' component={About} />
+                        </Switch>
+                    </div>
                 </div>
-            </div>
+            </Router>
         );
     }
 }
