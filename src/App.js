@@ -13,30 +13,9 @@ import './App.css';
 import axios from 'axios';
 
 const App = () => {
-    const [users, setUsers] = useState([]);
-    const [user, setUser] = useState({});
     const [repos, setRepos] = useState([]);
     const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState(null);
-
-    // Search GitHub Users
-
-    // Get single GitHub user
-    const getUser = async (username) => {
-        setLoading(true);
-
-        const res = await axios({
-            url: `https://api.github.com/users/${username}`,
-            method: 'get',
-            auth: {
-                username: `${process.env.REACT_APP_GITHUB_CLIENT_ID}`,
-                password: `${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
-            },
-        });
-
-        setUser(res.data);
-        setLoading(false);
-    };
 
     // Get user's repos
     const getUserRepos = async (username) => {
@@ -55,20 +34,12 @@ const App = () => {
         setLoading(false);
     };
 
-    // Clear users from state
-    const clearUsers = () => {
-        setUsers([]);
-        setLoading(false);
-    };
-
     // Set Alert
     const showAlert = (msg, type) => {
         setAlert({ msg, type });
 
         setTimeout(() => setAlert(null), 5000);
     };
-
-    // Destructuring variable and function names to be used.
 
     return (
         <GithubState>
@@ -83,17 +54,8 @@ const App = () => {
                                 path='/'
                                 render={(props) => (
                                     <Fragment>
-                                        <Search
-                                            clearUsers={clearUsers}
-                                            showClear={
-                                                users.length > 0 ? true : false
-                                            }
-                                            showAlert={showAlert}
-                                        />
-                                        <Users
-                                            loading={loading}
-                                            users={users}
-                                        />
+                                        <Search showAlert={showAlert} />
+                                        <Users />
                                     </Fragment>
                                 )}
                             />
@@ -104,11 +66,8 @@ const App = () => {
                                 render={(props) => (
                                     <User
                                         {...props}
-                                        getUser={getUser}
                                         getUserRepos={getUserRepos}
-                                        user={user}
                                         repos={repos}
-                                        loading={loading}
                                     />
                                 )}
                             />
