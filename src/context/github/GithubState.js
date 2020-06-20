@@ -10,6 +10,17 @@ import {
     GET_REPOS,
 } from '../types';
 
+let githubClientId;
+let githubClientSecret;
+
+if (process.env.NODE_ENV !== 'production') {
+    githubClientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+    githubClientSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
+} else {
+    githubClientId = process.env.GITHUB_CLIENT_ID;
+    githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
+}
+
 const GithubState = (props) => {
     const initialState = {
         users: [],
@@ -28,8 +39,8 @@ const GithubState = (props) => {
             url: `https://api.github.com/search/users?q=${text}`,
             method: 'get',
             auth: {
-                username: `${process.env.REACT_APP_GITHUB_CLIENT_ID}`,
-                password: `${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
+                username: `${githubClientId}`,
+                password: `${githubClientSecret}`,
             },
         });
 
@@ -47,8 +58,8 @@ const GithubState = (props) => {
             url: `https://api.github.com/users/${username}`,
             method: 'get',
             auth: {
-                username: `${process.env.REACT_APP_GITHUB_CLIENT_ID}`,
-                password: `${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
+                username: `${githubClientId}`,
+                password: `${githubClientSecret}`,
             },
         });
 
@@ -66,8 +77,8 @@ const GithubState = (props) => {
             url: `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`,
             method: 'get',
             auth: {
-                username: `${process.env.REACT_APP_GITHUB_CLIENT_ID}`,
-                password: `${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`,
+                username: `${githubClientId}`,
+                password: `${githubClientSecret}`,
             },
         });
 
