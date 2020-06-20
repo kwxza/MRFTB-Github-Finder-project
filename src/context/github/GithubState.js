@@ -10,16 +10,23 @@ import {
     GET_REPOS,
 } from '../types';
 
-let githubClientId;
-let githubClientSecret;
+// let githubClientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+// let githubClientSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
 
-if (process.env.NODE_ENV !== 'production') {
-    githubClientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
-    githubClientSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
-} else {
-    githubClientId = process.env.GITHUB_CLIENT_ID;
-    githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
-}
+// if (process.env.NODE_ENV !== 'production') {
+//     githubClientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+//     githubClientSecret = process.env.REACT_APP_GITHUB_CLIENT_SECRET;
+// } else {
+//     githubClientId = process.env.GITHUB_CLIENT_ID;
+//     githubClientSecret = process.env.GITHUB_CLIENT_SECRET;
+// }
+
+// Axios request object
+const githubApi = axios.create({
+    baseURL: 'https://api.github.com',
+    timeout: 1000,
+    headers: { Authorization: process.env.REACT_APP_GITHUB_TOKEN },
+});
 
 const GithubState = (props) => {
     const initialState = {
@@ -35,14 +42,18 @@ const GithubState = (props) => {
     const searchUsers = async (text) => {
         setLoading();
 
-        const res = await axios({
-            url: `https://api.github.com/search/users?q=${text}`,
-            method: 'get',
-            auth: {
-                username: `${githubClientId}`,
-                password: `${githubClientSecret}`,
-            },
-        });
+        // const res = await axios({
+        //     url: `https://api.github.com/search/users?q=${text}`,
+        //     method: 'get',
+        //     auth: {
+        //         username: `${githubClientId}`,
+        //         password: `${githubClientSecret}`,
+        //     },
+        // });
+
+        const res = await githubApi.get(
+            `https://api.github.com/search/users?q=${text}`
+        );
 
         dispatch({
             type: SEARCH_USERS,
@@ -54,14 +65,18 @@ const GithubState = (props) => {
     const getUser = async (username) => {
         setLoading();
 
-        const res = await axios({
-            url: `https://api.github.com/users/${username}`,
-            method: 'get',
-            auth: {
-                username: `${githubClientId}`,
-                password: `${githubClientSecret}`,
-            },
-        });
+        // const res = await axios({
+        //     url: `https://api.github.com/users/${username}`,
+        //     method: 'get',
+        //     auth: {
+        //         username: `${githubClientId}`,
+        //         password: `${githubClientSecret}`,
+        //     },
+        // });
+
+        const res = await githubApi.get(
+            `https://api.github.com/users/${username}`
+        );
 
         dispatch({
             type: GET_USER,
@@ -73,14 +88,18 @@ const GithubState = (props) => {
     const getUserRepos = async (username) => {
         setLoading();
 
-        const res = await axios({
-            url: `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`,
-            method: 'get',
-            auth: {
-                username: `${githubClientId}`,
-                password: `${githubClientSecret}`,
-            },
-        });
+        // const res = await axios({
+        //     url: `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`,
+        //     method: 'get',
+        //     auth: {
+        //         username: `${githubClientId}`,
+        //         password: `${githubClientSecret}`,
+        //     },
+        // });
+
+        const res = await githubApi.get(
+            `https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc`
+        );
 
         dispatch({ type: GET_REPOS, payload: res.data });
     };
